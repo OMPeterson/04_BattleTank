@@ -16,8 +16,11 @@ private:
 
 	virtual void Tick(float DeltaSeconds) override;
 
-	//Start tank moving barrel so that shot would hit where crosshair intersects world
+	// Start tank moving barrel so that shot would hit where crosshair intersects world
 	void AimTowardCrosshair();
 	
+	bool GetSightRayHitLocation(FVector& HitLocation);
+
+	/// GETTERS
 	ATank* GetControlledTank() const;
 };

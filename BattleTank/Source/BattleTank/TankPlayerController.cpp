@@ -35,4 +35,34 @@ void ATankPlayerController::AimTowardCrosshair()
 {
 	if (!GetControlledTank())
 		return;
+
+	FVector HitLocation; //Out parameter
+	
+	if (GetSightRayHitLocation(HitLocation))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hitlocation: %s"), *(HitLocation.ToString()));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No hit."))
+	}
+}
+
+bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation)
+{
+	//FHitResult Hit;
+	ATank* ControlledTank = GetControlledTank();
+	FVector LineTraceEnd = ControlledTank->GetPawnViewLocation() + (ControlledTank->GetViewRotation().Vector() * 100);
+
+	DrawDebugLine(GetWorld(), ControlledTank->GetPawnViewLocation(), LineTraceEnd, FColor(255, 0, 0), false, 0, 0, 10.f);
+
+	/*GetWorld()->LineTraceSingleByObjectType(
+		Hit, 
+		ControlledTank->GetPawnViewLocation(),
+		LineTraceEnd,
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_WorldStatic),
+		FCollisionQueryParams(FName(TEXT("")), false, GetOwner())
+		);
+	HitLocation = Hit.Location;
+	*/
 }
