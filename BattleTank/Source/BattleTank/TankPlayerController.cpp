@@ -4,26 +4,23 @@
 #include "TankPlayerController.h"
 
 
+void ATankPlayerController::BeginPlay()
+{
+	Super::BeginPlay(); //Calls parent BeginPlays
+
+	ATank* ControlledTank = GetControlledTank();
+	if (ControlledTank)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("TankPlayerController Possessing tank %s"), *(ControlledTank->GetName()));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("TankPlayerController not possessing any tank"));
+	}
+}
+
 ATank* ATankPlayerController::GetControlledTank() const
 {
 	return Cast<ATank>(GetPawn());
 }
 
-void ATankPlayerController::BeginPlay()
-{
-	Super::BeginPlay(); //Calls parent BeginPlays
-	UE_LOG(LogTemp, Warning, TEXT("TankPlayerController BeginPlay called"));
-
-
-	ATank* ControlledTank = nullptr;
-	ControlledTank = GetControlledTank();
-
-	if (ControlledTank)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Tank Possessed: %s"), *(ControlledTank->GetName()));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No Tank Possessed"));
-	}
-}
