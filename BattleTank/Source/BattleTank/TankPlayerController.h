@@ -19,8 +19,14 @@ private:
 	// Start tank moving barrel so that shot would hit where crosshair intersects world
 	void AimTowardCrosshair();
 	
-	bool GetSightRayHitLocation(FVector& HitLocation);
+	bool GetSightRayHitLocation(FVector& HitLocation) const;
 
 	/// GETTERS
 	ATank* GetControlledTank() const;
+
+	/// Members
+	UPROPERTY(EditAnywhere)
+		float CrosshairXLocation = 0.5;
+	UPROPERTY(EditAnywhere)
+		float CrosshairYLocation = 0.3333;
 };

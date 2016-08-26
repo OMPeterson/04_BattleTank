@@ -40,7 +40,7 @@ void ATankPlayerController::AimTowardCrosshair()
 	
 	if (GetSightRayHitLocation(HitLocation))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Hitlocation: %s"), *(HitLocation.ToString()));
+		//UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *(HitLocation.ToString()));
 	}
 	else
 	{
@@ -48,15 +48,38 @@ void ATankPlayerController::AimTowardCrosshair()
 	}
 }
 
-bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation)
+bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 {
+	//find crosshair pixel postion
+	int32 ViewportSizeX, ViewportSizeY;
+	GetViewportSize(ViewportSizeX, ViewportSizeY);
+	FVector2D ScreenLocation = FVector2D(ViewportSizeX * CrosshairXLocation, ViewportSizeY * CrosshairYLocation);
+	UE_LOG(LogTemp, Warning, TEXT("Crosshair location: %s"), *ScreenLocation.ToString());
+
+	// deproject screen position of crosshair to a world direction
+	FVector CameraLocation;
+	FVector WorldDirection;
+	if (DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y, CameraLocation, WorldDirection))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("World Direction: %s"), *WorldDirection.ToString())
+	}
+
+	// linetrace along that direction, and see what we hit (up to max range)
+
+	HitLocation = FVector(1.0);
+	return true;
+	/*
 	//FHitResult Hit;
 	ATank* ControlledTank = GetControlledTank();
-	FVector LineTraceEnd = ControlledTank->GetPawnViewLocation() + (ControlledTank->GetViewRotation().Vector() * 100);
+	FVector Location;
+	FRotator Rotation;
+	GetPlayerViewPoint(Location, Rotation);
+	FVector LineTraceEnd = Location + (Rotation.Vector() * 100000);
 
-	DrawDebugLine(GetWorld(), ControlledTank->GetPawnViewLocation(), LineTraceEnd, FColor(255, 0, 0), false, 0, 0, 10.f);
+	DrawDebugLine(GetWorld(), ControlledTank->GetPawnViewLocation(), LineTraceEnd, FColor(255, 0, 0), false, 1, 0, 10.f);
+	return true;
 
-	/*GetWorld()->LineTraceSingleByObjectType(
+	GetWorld()->LineTraceSingleByObjectType(
 		Hit, 
 		ControlledTank->GetPawnViewLocation(),
 		LineTraceEnd,
