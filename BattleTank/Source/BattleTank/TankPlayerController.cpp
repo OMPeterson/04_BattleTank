@@ -34,11 +34,8 @@ void ATankPlayerController::AimTowardCrosshair()
 	
 	if (GetSightRayHitLocation(HitLocation))
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *(HitLocation.ToString()));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No hit."))
+		GetControlledTank()->AimAt(HitLocation);
+		//UE_LOG(LogTemp, Warning, TEXT("HitLocation AFTER: %s"), *(HitLocation.ToString()));
 	}
 }
 
@@ -47,18 +44,10 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 	FVector CameraLocation, AimDirection;
 	if (DeprojectScreenPosToDirection(CameraLocation, AimDirection))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("World Direction: %s"), *AimDirection.ToString());
-		FVector HitLocation;
-		if (GetLookVectorHitLocation(CameraLocation, AimDirection, HitLocation))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Hit Location: %s"), *HitLocation.ToString());
-		}
+		//UE_LOG(LogTemp, Warning, TEXT("World Direction: %s"), *AimDirection.ToString());
+		return GetLookVectorHitLocation(CameraLocation, AimDirection, HitLocation);
 	}
-
-	// linetrace along that direction, and see what we hit (up to max range)
-
-	HitLocation = FVector(1.0);
-	return true;
+	return false;
 	/*
 	//FHitResult Hit;
 	ATank* ControlledTank = GetControlledTank();
@@ -87,7 +76,7 @@ bool ATankPlayerController::DeprojectScreenPosToDirection(FVector& CameraLocatio
 	int32 ViewportSizeX, ViewportSizeY;
 	GetViewportSize(ViewportSizeX, ViewportSizeY);
 	FVector2D ScreenLocation = FVector2D(ViewportSizeX * CrosshairXLocation, ViewportSizeY * CrosshairYLocation);
-	UE_LOG(LogTemp, Warning, TEXT("Crosshair location: %s"), *ScreenLocation.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Crosshair location: %s"), *ScreenLocation.ToString());
 
 	// Deproject screen position of crosshair to a world direction
 	return DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y, CameraLocation, AimDirection);
