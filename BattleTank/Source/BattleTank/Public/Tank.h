@@ -2,8 +2,9 @@
 
 #pragma once
 
+#include "TankAimingComp.h"
 #include "GameFramework/Pawn.h"
-#include "Tank.generated.h"
+#include "Tank.generated.h" // Put new includes above
 
 UCLASS()
 class BATTLETANK_API ATank : public APawn
@@ -12,6 +13,12 @@ class BATTLETANK_API ATank : public APawn
 
 public:
 	void AimAt(FVector HitLocation);
+
+	UFUNCTION(BlueprintCallable, Category = Setup) // cannot have ;
+	void SetBarrelReference(UStaticMeshComponent* BarrelToSet);
+
+protected: // TODO: Investigate what this means
+	UTankAimingComp* TankAimingComp;
 
 private:
 	// Sets default values for this pawn's properties
@@ -26,6 +33,6 @@ private:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
-	
-	
+	UPROPERTY(EditAnywhere, Category = Firing)
+		float LaunchSpeed;
 };
