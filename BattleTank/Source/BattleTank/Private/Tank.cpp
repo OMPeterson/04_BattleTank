@@ -13,7 +13,7 @@ ATank::ATank()
 	LaunchSpeed = 100000; // 1000 m/s
 }
 
-void ATank::SetBarrelReference(UStaticMeshComponent* BarrelToSet)
+void ATank::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
 	TankAimingComp->SetBarrelReference(BarrelToSet);
 }
