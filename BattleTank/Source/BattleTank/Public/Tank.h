@@ -7,6 +7,7 @@
 
 // forward declarations
 class UTankBarrel; 
+class UTankTurret;
 class UTankAimingComp;
 
 UCLASS()
@@ -19,6 +20,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Setup) // cannot have ;
 	void SetBarrelReference(UTankBarrel* BarrelToSet);
+
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetTurretReference(UTankTurret* TurretToSet);
+
+	UFUNCTION(BluePrintCallable, Category = Gameplay)
+	void Fire();
 
 protected: // TODO: Investigate what this means
 	UTankAimingComp* TankAimingComp;
@@ -34,5 +41,5 @@ private:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
 	UPROPERTY(EditAnywhere, Category = Firing)
-		float LaunchSpeed;
+		float LaunchSpeed = 4000;
 };

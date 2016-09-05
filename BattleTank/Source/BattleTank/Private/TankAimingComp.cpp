@@ -2,6 +2,7 @@
 
 #include "BattleTank.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 #include "TankAimingComp.h"
 
 
@@ -10,15 +11,27 @@ UTankAimingComp::UTankAimingComp()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	bWantsBeginPlay = true; // TODO: Should this really tick?
-	PrimaryComponentTick.bCanEverTick = true;
+	bWantsBeginPlay = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
 
 void UTankAimingComp::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
-	Barrel = BarrelToSet;
+	if(BarrelToSet)
+	{
+		Barrel = BarrelToSet;
+	}
+	
+}
+
+void UTankAimingComp::SetTurretReference(UTankTurret* TurretToSet)
+{
+	if (TurretToSet)
+	{
+		Turret = TurretToSet;
+	}
 }
 
 
@@ -41,12 +54,12 @@ void UTankAimingComp::AimAt(const FVector& HitLocation, float LaunchSpeed)
 			//FString TankName = GetOwner()->GetName();
 			//UE_LOG(LogTemp, Warning, TEXT("%s aiming at %s"), *TankName, *LaunchDirection.ToString());
 			float Time = GetWorld()->GetTimeSeconds();
-			UE_LOG(LogTemp, Warning, TEXT("Aim solution at time %f"), Time);
+			//UE_LOG(LogTemp, Warning, TEXT("Aim solution at time %f"), Time);
 		}	
 		else
 		{
 			float Time = GetWorld()->GetTimeSeconds();
-			UE_LOG(LogTemp, Warning, TEXT("No Aim solution at time %f"), Time);
+			//UE_LOG(LogTemp, Warning, TEXT("No Aim solution at time %f"), Time);
 		}
 	}
 }
@@ -61,4 +74,5 @@ void UTankAimingComp::MoveBarrelTowards(const FVector& LaunchDirection)
 	FRotator DeltaRotator = AimRotation - BarrelRotation;
 	//UE_LOG(LogTemp, Warning, TEXT("AimRotation = %s"), *AimRotation.ToString());
 	Barrel->Elevate(DeltaRotator.Pitch);
+	Turret->Rotate(DeltaRotator.Yaw);
 }
